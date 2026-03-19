@@ -1,0 +1,7 @@
+# Neovim swap y temporales
+swap/
+undo/
+backup/
+*.swp
+*.swo
+.DS_Store
