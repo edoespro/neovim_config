@@ -10,6 +10,10 @@ if key_info.source == "<Down>" then
 M.down()
 elseif key_info.source == "<Up>" then
 	M.up()
+elseif key_info.source == "<Home>" then
+	tts.speak("Inicio de línea")
+elseif key_info.source == "<End>" then
+	tts.speak("Fin de línea")
 end
 
 end)
