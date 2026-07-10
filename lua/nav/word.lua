@@ -1,8 +1,19 @@
 local M = {}
 
-local modes = require("reader.modes")
-local echo = require("reader.echo")
+
 local tts = require("tts")
+local keyboard = require("keyboard")
+
+_G.tts_word_jump_active = False
+_G.tts_word_jump_direction = ""
+keyboard.add_handler("MODIFICADOR", function(key_info)
+      if key_info.source == "<C-Left>" or key_info.source == "<C-Right>" then
+	_G.tts_word_jump_active = true
+	_G.tts_word_jump_direction = key_info.key
+	--tts.speak(key_info.key)
+	--print(key_info.key)
+end
+end)
 
 -- Diccionario fonético para cuando el cursor frene en símbolos especiales
 local symbol_translations = {
@@ -29,10 +40,8 @@ local symbol_translations = {
 }
 
 function M.setup()
-  modes.setup()
-  echo.start()
 
-  vim.api.nvim_create_autocmd("CursorMovedI", {
+  vim.api.nvim_create_autocmd({"CursorMoved", "CursorMovedI"}, {
     group = vim.api.nvim_create_augroup("TTS_Accessibility_Cursor", { clear = true }),
     callback = function()
       if _G.tts_word_jump_active then
@@ -41,9 +50,9 @@ function M.setup()
         local line = vim.api.nvim_get_current_line()
 
         -- 1. Gestión estricta de los bordes físicos de la línea
-        if _G.tts_word_jump_direction == "left" and col == 0 then
-          tts.speak("Inicio de línea")
-        elseif _G.tts_word_jump_direction == "right" and col >= #line then
+        --if _G.tts_word_jump_direction == "Left" and col == 0 then
+          --tts.speak("Inicio de línea")
+        if _G.tts_word_jump_direction == "Right" and col >= #line then
           tts.speak("Fin de línea")
         else
           -- 2. Extraer el carácter físico exacto bajo el cursor (índice Lua = col + 1)
@@ -88,4 +97,3 @@ end
 M.setup()
 
 return M
-

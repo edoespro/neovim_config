@@ -1,0 +1,7 @@
+require("options")
+require("keymaps")
+require("modes")
+require("nav")
+tts = require("tts")
+tts.speak("prueba prueba prueba prueba")
+require("echo")

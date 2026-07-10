@@ -1,9 +1,4 @@
-require("config")
-require("reader")
-tts = require("tts")
-tts.speak("prueba prueba prueba prueba")
---temp = require("temp")
---temp.start_temp()
+require("main")
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
