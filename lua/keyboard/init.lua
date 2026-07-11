@@ -4,9 +4,8 @@
 
 local M = {}
 
+local modes = require("modes")
 local parser = require("keyboard.key_parser")
-
-
 
 local listeners = {}
 
@@ -17,6 +16,11 @@ function M.add_handler(event, handler)
   table.insert(listeners[event], handler)
 end
 
+function M.add_handlers(events, handler)
+  for _, event in ipairs(events) do
+    M.add_handler(event, handler)
+  end
+end
 
 function M.dispatch(event, data)
 	if not listeners[event] then return end
@@ -61,8 +65,9 @@ end
 function M.process_key(key_bytes)
   -- 1. Analizar la tecla usando el parser puro
   local parsed = parser.parse_key(key_bytes)
+local mode_short_name = modes.get_mode().short_name
 
- M.dispatch(parsed.type, parsed)
+ M.dispatch(mode_short_name, parsed)
 
     end
 

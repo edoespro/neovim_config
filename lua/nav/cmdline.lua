@@ -5,10 +5,12 @@ local keyboard = require("keyboard")
 
 _speak_line = false
 
-keyboard.add_handler("ESPECIAL", function(key_info) 
+keyboard.add_handler("c", function(key_info) 
 
 	if key_info.source == "<Down>" or key_info.source == "<Up>" then
 		_speak_line = true
+	elseif key_info.source == "<Left>" or key_info.source == "<Right>" then
+		--M.char()
 	end
 end)
 
@@ -35,5 +37,12 @@ end,
 --end, { expr = true })
 
 
+function M.char()
+
+	local cursor_pos = vim.fn.getcmdpos()
+        local current_cmd = vim.fn.getcmdline()
+        -- Tu lógica aquí
+        tts.speak("En command: " .. current_cmd .. " " .. cursor_pos)
+end
 
 return M

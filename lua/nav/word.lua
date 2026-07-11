@@ -6,7 +6,7 @@ local keyboard = require("keyboard")
 
 _G.tts_word_jump_active = False
 _G.tts_word_jump_direction = ""
-keyboard.add_handler("MODIFICADOR", function(key_info)
+keyboard.add_handlers({"i", "n"}, function(key_info)
       if key_info.source == "<C-Left>" or key_info.source == "<C-Right>" then
 	_G.tts_word_jump_active = true
 	_G.tts_word_jump_direction = key_info.key

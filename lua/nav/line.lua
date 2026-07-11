@@ -3,7 +3,7 @@ local M = {}
 tts = require("tts")
 keyboard = require("keyboard")
 
-keyboard.add_handler("ESPECIAL", function(key_info) 
+keyboard.add_handlers({"i", "n", "V"}, function(key_info) 
 
 if key_info.source == "<Down>" then
 
