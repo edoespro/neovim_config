@@ -1,49 +1,68 @@
-
+local M = {}
 
 local tts = require("tts")
+local keyboard = require("keyboard")
+
+
+keyboard.add_handler("c", function(key_info) 
+if key_info.source == "<BS>" then
+	M.bs_c()
+elseif key_info.source == "<Del>" then
+	M.del_c()
+end
+end)
 
 local function get_last_word()
   local cursor = vim.api.nvim_win_get_cursor(0)
   local col = cursor[2] -- Asegúrate de extraer el índice de columna de la tabla
   local line = vim.api.nvim_get_current_line()
-  
+
   local text_before_cursor = string.sub(line, 1, col)
-  
+
   -- El corchete [%w_]+ significa: Busca cualquier combinación de letras, números O guiones bajos
   local last_word = string.match(text_before_cursor, "([%w_]+)$")
-  
+
   return last_word
 end
 
+function M.del_c()
+local col = vim.fn.getcmdpos()
+local line = vim.fn.getcmdline()
+local target_col = col --+ 1
+  
+  --if target_col <= #line then
+    local char_to_delete = string.sub(line, target_col, target_col)
 
--- 1. Mapeo para la tecla <Space> (Verbaliza palabras procesando guiones bajos)
-vim.keymap.set("i", "<Space>", function()
-  
-  local word = get_last_word()
-  
-  if word and word ~= "" then
-    -- Envía la palabra completa al proceso persistente de inmediato
-    tts.speak(word)
-  end
+    if char_to_delete == " " then
+      char_to_delete = "espacio"
+    elseif char_to_delete == "" then
+      char_to_delete = "Fin de línea"
+    end
 
-	--local word = get_last_word()
-  
-  --if word and word ~= "" then
-    -- Reemplaza globalmente (string.gsub) cada "_" por la frase "barra baja "
-    -- El espacio extra al final de "barra baja " asegura que el motor TTS separe los sonidos de las palabras vecinas
-    --local verbalized_word = string.gsub(word, "_", "barra baja ")
-    
-    -- Eliminamos posibles espacios dobles al final para limpiar el texto
-    --verbalized_word = vim.trim(verbalized_word)
-    
-    -- Envía la expresión procesada completa a la cola FIFO
-    --tts.speak(verbalized_word)
+    tts.speak(char_to_delete)
+end
+
+function M.bs_c()
+local col = vim.fn.getcmdpos()
+local line = vim.fn.getcmdline()
+
+if col > 1 then
+	col = col - 1
+end
+--if col > 0 then
+    -- Captura el carácter exacto que el Backspace va a eliminar
+    local char_to_delete = string.sub(line, col, col)
+
+    if char_to_delete == " " then
+      char_to_delete = "espacio"
+    --elseif char_to_delete == "" and row > 1 then
+      --char_to_delete = "fin de línea"
+      --char_to_delete = "delete line"
+    end
+
+    tts.speak(char_to_delete)
   --end
-  
-  return "<Space>"
-end, { expr = true, replace_keycodes = true })
-
-
+end
 
 -- 2. Mapeo para la tecla <BS> (Verbaliza caracteres individuales)
 vim.keymap.set("i", "<BS>", function()
@@ -146,3 +165,6 @@ end
 --end, { expr = true, replace_keycodes = true })
 
 
+
+
+return M

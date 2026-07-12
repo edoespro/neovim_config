@@ -75,4 +75,34 @@ function M.up()
 
 end
 
+
+
+_speak_line = false
+
+keyboard.add_handler("c", function(key_info)
+
+        if key_info.source == "<Down>" or key_info.source == "<Up>" then
+                _speak_line = true
+        end
+end)
+
+local my_cursor_group = vim.api.nvim_create_augroup("CustomCursorTracker", { clear = true })
+
+-- 1. DETECTAR EN MODO COMANDO (:)
+vim.api.nvim_create_autocmd("CmdlineChanged", {
+    group = my_cursor_group,
+    pattern = "*",
+    callback = function()
+        if _speak_line then
+            --local cursor_pos = vim.fn.getcmdpos()
+        local current_cmd = vim.fn.getcmdline()
+        -- Tu lógica aquí
+        tts.speak(current_cmd .. " ")
+        _speak_line = false
+end
+end,
+})
+
+
+
 return M
