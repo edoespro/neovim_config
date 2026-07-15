@@ -1,3 +1,4 @@
+
 local M = {}
 
 
@@ -6,6 +7,7 @@ local keyboard = require("keyboard")
 
 _G.tts_word_jump_active = False
 _G.tts_word_jump_direction = ""
+
 keyboard.add_handlers({"i", "n"}, function(key_info)
       if key_info.source == "<C-Left>" or key_info.source == "<C-Right>" then
 	_G.tts_word_jump_active = true
@@ -14,6 +16,14 @@ keyboard.add_handlers({"i", "n"}, function(key_info)
 	--print(key_info.key)
 end
 end)
+
+keyboard.add_handler("c", function(key_info)
+      if key_info.source == "<C-Left>" or key_info.source == "<C-Right>" then
+	M.cursormoved_c()
+
+      end
+end)
+
 
 -- Diccionario fonético para cuando el cursor frene en símbolos especiales
 local symbol_translations = {
@@ -57,7 +67,21 @@ function M.setup()
         else
           -- 2. Extraer el carácter físico exacto bajo el cursor (índice Lua = col + 1)
           local char_idx = col + 1
-          local current_char = string.sub(line, char_idx, char_idx)
+	  M.process(line, char_idx)
+          end
+        end
+
+        -- Limpieza obligatoria de las banderas
+        _G.tts_word_jump_active = false
+        _G.tts_word_jump_direction = ""
+      
+    end,
+  })
+end
+
+function M.process(line, char_idx)
+
+	local current_char = string.sub(line, char_idx, char_idx)
 
           -- 3. Caso A: Si el cursor frenó sobre un espacio en blanco
           if current_char == " " or current_char == "" then
@@ -83,17 +107,41 @@ function M.setup()
           else
             -- Respaldo por si cae en un carácter no mapeado (ej. emojis o caracteres raros)
             tts.speak(current_char)
-          end
-        end
 
-        -- Limpieza obligatoria de las banderas
-        _G.tts_word_jump_active = false
-        _G.tts_word_jump_direction = ""
-      end
-    end,
-  })
+	end
 end
 
 M.setup()
 
-return M
+local cmd_tracker = {
+    last_pos = 1,
+}
+
+
+function M.cursormoved_c()
+    -- Programamos la ejecución justo un instante después de que la tecla actúe
+    vim.schedule(function()
+        local col = vim.fn.getcmdpos()
+        
+        -- Validamos si la posición cambió respecto al último registro
+        if col ~= cmd_tracker.last_pos then
+            -- ¡AQUÍ CAPTURAS EL EVENTO! El cursor se movió sin escribir nada
+            local line = vim.fn.getcmdline()
+	    M.process(line, col) 
+            
+            -- Actualizamos la última posición conocida
+            cmd_tracker.last_pos = col
+        end
+    end)
+
+    -- Retornamos la tecla original para que Neovim mueva el cursor normalmente
+
+end
+
+vim.api.nvim_create_autocmd("CmdlineEnter", {
+    callback = function()
+        cmd_tracker.last_pos = 1 -- Al presionar (:) el cursor siempre inicia en 1
+    end
+})
+
+    return M

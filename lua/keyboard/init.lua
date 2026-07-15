@@ -4,7 +4,7 @@
 
 local M = {}
 
-local modes = require("modes")
+local modes = require("modes.manager")
 local parser = require("keyboard.key_parser")
 
 local listeners = {}

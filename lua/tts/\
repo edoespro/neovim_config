@@ -9,8 +9,7 @@ local engine = require("tts.backend.termux")
 local speed = require("tts.speed")
 local M = {}
 
-local last_statusmsg = "" 
-local last errmsg = ""
+local last_message = nil
 
 -- Estado interno
 local state = {
@@ -158,20 +157,15 @@ speed.on_stop(M.on_stop)
 
 
 function M.check_messages()
-
 local statusmsg = vim.v.statusmsg
 if statusmsg and statusmsg ~= "" then
 speed.on_move({text = "mensaje de estado: " .. statusmsg, priority = 3, insert_type = "queue"})
-last_statusmsg = statusmsg
-vim.v.statusmsg = ""
 end
 local errmsg = vim.v.errmsg
 if errmsg and errmsg ~= "" then
 speed.on_move({text = " Mensaje de error: " .. errmsg, priority = 3, insert_type = "queue"})
-last_errmsg = errmsg
-vim.v.errmsg = ""
 end
-local messages = vim.v.messages
+local messages = vim.fn.get_messages()
 if messages then
 speed.on_move({text = "Si hay mmensajes", priority = 3, insert_type = "queue"})
 end
