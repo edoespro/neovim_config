@@ -21,9 +21,9 @@ local cursor = vim.api.nvim_win_get_cursor(0) -- Devuelve la tabla {fila, column
   local line = vim.api.nvim_get_current_line()
 
   -- Si ya está en la columna 0, no puede retroceder más dentro de esta línea
-  if col == 0 then
-    tts.speak("Inicio de línea")
-  else
+  --if col == 0 then
+    --tts.speak("Inicio de línea")
+  --else
     -- Al movernos a la izquierda, el cursor se desplazará al índice anterior.
     -- Como Neovim usa base 0 y Lua usa base 1, el índice del carácter de destino
     -- en Lua coincide exactamente con el valor actual de 'col'.
@@ -32,11 +32,12 @@ local cursor = vim.api.nvim_win_get_cursor(0) -- Devuelve la tabla {fila, column
     if next_char == " " then
       next_char = "espacio"
     elseif next_char == "" then
-      next_char = "salto de línea"
+    next_char = string.sub(line, col+1, col+1)
+    --next_char = "salto de línea"
     end
 
     tts.speak(next_char)
-  end
+  --end
 end
 
 

@@ -31,9 +31,12 @@ function M.down()
 
   -- Si la fila actual ya es la última línea del archivo, no puede bajar más
   if row >= total_lines then
-    tts.flush("Fin del archivo")
+    local next_lines = vim.api.nvim_buf_get_lines(0, row-1, row, false)
+    local target_line = next_lines[1] or ""
+    --tts.flush("Fin del archivo")
+    tts.speak(target_line)
   else
-    -- Usamos vim.api.nvim_buf_get_lines para leer el texto de la línea siguiente.
+    -- Usamos vim.api.nvm_buf_get_lines para leer el texto de la línea siguiente.
     -- Esta API usa base 0. Como 'row' en Neovim ya está apuntando de forma natural
     -- al índice de la línea de abajo en base 0, pasamos 'row' y 'row + 1'.
     local next_lines = vim.api.nvim_buf_get_lines(0, row, row + 1, false)
@@ -44,7 +47,7 @@ function M.down()
       target_line = "Línea vacía"
     end
 
-    tts.flush(target_line)
+    tts.speak(target_line)
   end
 
 end
@@ -58,7 +61,11 @@ function M.up()
 
   -- Ahora 'row' es un número real, por lo que la comparación funciona perfectamente
   if row <= 1 then
-    tts.flush("Inicio del archivo")
+    local next_lines = vim.api.nvim_buf_get_lines(0, 0, 1, false)
+    local target_line = next_lines[1] or ""
+    --tts.flush("Inicio del archivo")
+    tts.speak(target_line)
+    --
   else
     -- Para leer la línea de arriba usando la API (base 0):
     -- Si estamos en la fila 5, la de arriba es el índice 3 en base 0. Formula: row - 2.

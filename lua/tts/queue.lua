@@ -11,6 +11,7 @@ local M = {}
 
 local last_statusmsg = "" 
 local last errmsg = ""
+local last_event = ""
 
 -- Estado interno
 local state = {
@@ -104,9 +105,13 @@ timer:start(0,1, vim.schedule_wrap(function()
 
 --M.check_messages()
 	  --state.is_speaking = true
-  local item        = table.remove(state.queue, 1)
-  speed.on_move(item)
-  M.check_messages()
+    --if not M.check_messages() then
+    local item        = table.remove(state.queue, 1)
+    --item.text = item.text .. " Evento: " .. last_event
+    speed.on_move(item)
+    --last_event = ""
+    --end
+  M.check_errmsg()
   --state.current_job = engine.speak(item.text, function()
     --state.is_speaking = false
     --state.current_job = nil
@@ -145,42 +150,90 @@ speed.on_stop(M.on_stop)
 
 
 
---local ns = vim.api.nvim_create_namespace('tts_messages')
+function M.attach()
 
---vim.ui_attach(ns, { ext_messages = true }, function(event, ...)
-    --if event == "msg_show" then
-      --  local args = {...}
-        -- Aquí puedes procesar el contenido del mensaje recibido en tiempo real
---print("Se recibio mensaje" .. event)
+local ns = vim.api.nvim_create_namespace('tts_messages')
 
---end
---end)
-
-
-function M.check_messages()
-
-local statusmsg = vim.v.statusmsg
-if statusmsg and statusmsg ~= "" then
-speed.on_move({text = "mensaje de estado: " .. statusmsg, priority = 3, insert_type = "queue"})
-last_statusmsg = statusmsg
-vim.v.statusmsg = ""
+vim.ui_attach(ns, { ext_messages = true }, function(event, ...)
+    if event == "msg_show" then
+        local args = {...}
+         --Aquí puedes procesar el contenido del mensaje recibido en tiempo real
+--print("evento: " .. event)
+	 --speed.on_move({text = "Se recibio mensaje" .. event, priority = 3, insert_type = "queue" })
+	 last_event = event
+        --vim.notify("asdf", vim.log.levels.INFO, {title = "Capturado"})
+	--print("asdf")
 end
+end)
+end
+--M.attach()
+
+function M.check_errmsg()
+
+--local statusmsg = vim.v.statusmsg
+--if statusmsg and statusmsg ~= "" then
+--speed.on_move({text = "mensaje de estado: " .. statusmsg, priority = 3, insert_type = "queue"})
+--last_statusmsg = statusmsg
+--vim.v.statusmsg = ""
+--return true
+--end
 local errmsg = vim.v.errmsg
 if errmsg and errmsg ~= "" then
 speed.on_move({text = " Mensaje de error: " .. errmsg, priority = 3, insert_type = "queue"})
 last_errmsg = errmsg
 vim.v.errmsg = ""
+return true
 end
-local messages = vim.v.messages
-if messages then
-speed.on_move({text = "Si hay mmensajes", priority = 3, insert_type = "queue"})
-end
+--local messages = vim.v.messages
+--if messages then
+--speed.on_move({text = "Si hay mensajes en v.messages", priority = 3, insert_type = "queue"})
+--return true
+--end
 --speed.on_move({text = "asdf", priority = 3, insert_type = "queue"})
 --print("status: " .. statusmsg .. " error: " .. errmsg)
+return false
 end
 
 
 --M.check_messages()
 
+function M.attach3()
+-- 1. Crear un namespace
+local ns = vim.api.nvim_create_namespace('MiPluginUI')
+
+-- 2. Adjuntar la interfaz de usuario
+local ui_id = vim.ui_attach(ns, { ext_messages = true }, function(event, ...)
+    local args = {...}
+   speed.on_move({text = event, priority = 3, insert_type = "queue"}) 
+    -- 3. Manejar los eventos
+    if event == 'msg_show' then
+        local kind, content, replace = args[1], args[2], args[3]
+
+        -- 'content' es una tabla de tablas. Necesitamos iterar para obtener el texto.
+        local message_text = ""
+        for _, chunk in ipairs(content) do
+            -- chunk[2] contiene el texto real
+            message_text = message_text .. chunk[2]
+        end
+
+        -- SOLUCIÓN: Volver a mostrar el mensaje usando vim.notify
+        -- Esto permite que Neovim maneje la visualización (o plugins como nvim-notify)
+        if message_text ~= "" then
+            vim.schedule(function()
+                vim.notify(message_text, vim.log.levels.INFO, {title = "Capturado"})
+            end)
+        end
+    end
+end)
+
+-- NOTA: Para liberar la UI cuando termines:
+-- vim.ui_detach(ui_id)
+
+end
+
+--M.attach()
+
 return M
+
+
 
