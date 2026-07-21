@@ -1,8 +1,10 @@
 require("options")
+require("tts")
 require("keymaps")
+require("autocmds")
 require("modes")
 require("nav")
-tts = require("tts")
-tts.speak("prueba prueba prueba prueba")
 require("echo")
 require("edit")
+--tts.speaK(modes._get_mode().name)
+

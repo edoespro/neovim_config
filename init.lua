@@ -39,7 +39,10 @@ end
 
 end
 
---check_map()
+
+--local timer_reader = require("tts.timer_reader")
+--local texto = 'public void main(){ text_separator = 123; }'
+--timer_reader.on_speak(texto)
 
 
 

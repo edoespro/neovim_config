@@ -1,0 +1,78 @@
+Hay que ajustar y afinar las reglas de lectura. El ejemplo que te di de (“interno”)=interno solo es un ejemplo, no es una regla fija, solo es un ejemplo de lo que he observado, por tanto, no es de rigor o por defecto que hay que omitir los caracteres “(” y “)” en las operaciones del calculo de tiempo, ya que, algunas veces si las verbaliza y otras veces no las verbaliza en funcion de determinadas reglas de lectura que no alcanzo a deducir o inferir completamente porque solo pruebo algunos casos, solo pruebo algunos casos y con las pruebas que hago no puedo deducir todas las reglas de lectura, por eso insisto, acude a la documentacion disponible e investiga las reglas de lectura que sigue un lector de pantalla para verbalizar los signos de puntuacion, los caracteres especiales, cuando si y cuando no se verbalizan, y como se verbalilza el texto en general.
+
+Los casos que he observado son los siguientes:
+
+( = “Parentesis de apertura”   (Si lo verbaliza)
+)  = “Parentesis de cierre” (Si lo verbaliza)
+() = “Parentesis que abre, parentesis que cierra” (Si lo verbaliza)
+funcion() = “funcion” (No verbaliza los parentesis)
+(funcion) = “funcion”  -(No verbaliza los parentesis)
+()funcion = “funcion” no verbaliza los parentesis)
+
+" = "comillas"|
+"" = "Comillas comillas"
+"texto" = "texto"
+""texto = "texto"
+texto"" = "texto"
+
+< = "Menor que"
+> = "Mayor que"
+<> = "Menor que mayor que"
+<>texto = "Menor que mayor que texto"
+<texto> = "Menor que texto mayor que"
+<>texto = "Menor que mayor que texto"
+
+Como puedes observar en el caso de signos de agrupacion nidividuales sin par de apertura o cierre correspondiente si se verbalizan, pero cuando si tienen par de apertura o de cierrre correspondiente, en algunos casos si se verbaliza como en el caso de mayor que menor que <> y en otros casos no se verbalizan como en el caso de los parentesis (), ya sea que esten antes, entre o despues de un texto.
+
+Otros casos que he observado:
+
+Palabra-compuesta = "Palabra compuesta" (No se verbaliza el guion de enmedio)
+Palabra_compuesta = "Palabra barra baja compuesta" (Si se verbaliza el guion bajo)
+
++ = "mas"
+- = "guion"
+* = "asterisco"
+/ = "diagonal"
+= = "igual a"
+~ = "tilde"
+@ = "arroba"
+# = "numeral"
+$ = "dolar"
+% = "por ciento"
+^ = "acento circunflejo"
+& = "y"
+! = "Signo de cierre de exclamacion"
+? = "signo de cierrre de interrogacion"
+| = "pleca"
+: = "dos punto"
+; = "punto y coma"
+{ = "llave que abre"
+} = "llave que cierra"
+[ = "corchete que abre"
+] = "corchete que cierra"
+\ = "diagonal inversa"
+. = "punto"
+
++-[]*/=~!@#$%^:;|.\-{}&? = "mas asterisco igual a tilde arroba numeral dolar porciento acento circunflejo y"
+
+Como puedes obserbar, En el casso de los operadores, signos de puntuacion y caracteres especiales, individualmente si se verbalizan, pero cuando estan antes, entre o despues de algun otro texto, en algunos casos si se verbalizan como en el caso de "mas asterisco igual a tilde arroba numeral dolar porciento acento circunflejo y" (+*=~@#$%^&) pero en otros casos no se verbaliza como en el caso de guion, diagonal, corchetes, llaves, punto, dos puntos, punto y coma, exclamacion, interrogacion, diagonal inversa,  etc.
+
+numeros:
+
+1234567890 = "uno dos tres cuatro cinco seis siete ocho nueve cero"
+46523 = "cuarenta y seis mil quinientos veintitres"
+465231 = "cuatro seis cinco dos tres uno"
+
+En el caso de los numeros, hasta cierta cantidad de digitos verbaliza la cantidad y despues de cierta cantidad de digitos solo verbaliza los numeros de manera secuencial.
+
+
+ Lo anterior es importante para no caer en inconsistencias cuando se navega por caracter, por palabra, por linea, por parrafo , etc. 
+
+ Cuando se navega por caracter debe verbalizar todos los caracteres a los que llega el cursor, esto puede entrar en conflicto si omitimos erroneamente por defecto algunos caracteres en el calculo del tiempo.
+
+Lo mismo puede pasar con la navegacion por palabra o por linea, o cuando se mande a verbalizar un mensaje.
+
+La indea es sicronizarnos al maximo a las reglas de lectura de un lector de pantalla y, en especifico, a las reblas de lectura de termux-tts-speak que usa el motor de sintesis de voz de google, busca informacion en la documentacion de termux-tts-speak, de talkback y en la documentacion de google referente al motor de sintesis de voz nativo de goolgle, acerca de las reglas de lectora y otra informacion que nos sirva de apoyo.
+
+Busca concienzudamente  no es necesario que seas flash sino que seas efectivo.
+
