@@ -17,7 +17,7 @@ local indice_lectura = 1             -- Posición actual dentro de la cola
 local tts_stop = false
 -- Calibración empírica establecida por tus pruebas
 time_estimator.set_spm(500)
-time_estimator.set_rate(1.0)
+time_estimator.set_rate(1.5)
 
 -- =============================================================================
 -- FUNCIÓN INTERNA: DESPACHADOR DE GOTEO (El motor recurrente)
@@ -40,7 +40,8 @@ local function despachar_siguiente_palabra()
 if not tts_stop then
     tts.speak(fragment_text)
 else
-    tts.speak("stop")
+    --tts.speak("stop")
+    tts_stop = false
 end
 
     -- 3. Calculamos cuántos milisegundos va a tardar el TTS en pronunciarla

@@ -115,6 +115,7 @@ function M.on_stop(verbosity)
 timer_reader.on_speak(verbosity.item.text)
 --state.current_job = engine.speak(verbosity.item.text, function()
 --  end)
+M.check_errmsg()
 end
 
 function M._process_text()

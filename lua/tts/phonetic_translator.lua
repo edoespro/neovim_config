@@ -23,7 +23,7 @@ local CONSONANTES = {
     ["b"]="be", ["c"]="ce", ["d"]="de", ["f"]="efe", ["g"]="ge", ["h"]="hache",
     ["j"]="jota", ["k"]="ka", ["l"]="ele", ["m"]="eme", ["n"]="ene", ["p"]="pe",
     ["q"]="cu", ["r"]="erre", ["s"]="ese", ["t"]="te", ["v"]="ve", ["w"]="doble u",
-    ["x"]="equis", ["y"]="y", ["z"]="zeta"
+    ["x"]="equis", ["y"]="ye", ["z"]="zeta"
 }
 
 local DIGITOS_INDIVIDUALES = {
