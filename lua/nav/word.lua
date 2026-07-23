@@ -17,12 +17,12 @@ keyboard.add_handlers({"i", "n"}, function(key_info)
 end
 end)
 
-keyboard.add_handler("c", function(key_info)
-      if key_info.source == "<C-Left>" or key_info.source == "<C-Right>" then
-	M.cursormoved_c()
+--keyboard.add_handler("c", function(key_info)
+--      if key_info.source == "<C-Left>" or key_info.source == "<C-Right>" then
+--	M.cursormoved_c()
 
-      end
-end)
+--      end
+--end)
 
 
 -- Diccionario fonético para cuando el cursor frene en símbolos especiales

@@ -9,15 +9,18 @@ if key_info.source == "<Down>" then
 
 M.down()
 elseif key_info.source == "<Up>" then
-	M.up()
-elseif key_info.source == "<Home>" then
+M.up()
+end
+end)
+
+
+keyboard.add_handlers({"i", "n", "V", "t"}, function(key_info) 
+if key_info.source == "<Home>" then
 	tts.speak("Inicio de línea")
 elseif key_info.source == "<End>" then
 	tts.speak("Fin de línea")
 end
-
 end)
-
 
 
 function M.down()
